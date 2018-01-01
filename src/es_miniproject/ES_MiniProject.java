@@ -5,12 +5,14 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class ES_MiniProject {
+    private static final int NUM_ITERATIONS = 10000;
+    private static final double LEARNING_RATE = 0.0001;
    
     public static void main(String[] args) {
-        String file_path = "C:\\Users\\User\\Documents\\NetBeansProjects\\ES_MiniProject\\src\\files\\Book1.csv"; 
+        String file_path = "C:\\Users\\Ted125\\Documents\\My Codes\\Java\\ES_MiniProject\\src\\files\\Book1.csv"; 
         String line = "";
         String cvsSplitBy = ",";
-        double[][] table = new double[11][8];
+        double[][] table = new double[731][8];
         double[] summations = new double[8]; 
         double slope, yintercept; 
         
@@ -18,7 +20,7 @@ public class ES_MiniProject {
         readFile(file_path, cvsSplitBy, table);
         solveXSqrd (table); 
         solveXY(table); 
-        solveSummations(table, summations); 
+        solveSummations(table, summations);
         
        
         slope = solveforSlope(table.length, summations);
@@ -32,6 +34,9 @@ public class ES_MiniProject {
         
         displayContents(table,summations); 
         displayLinerRegression (slope, yintercept);
+        
+        GradientDescent gd = new GradientDescent(table, LEARNING_RATE, 0, 0, NUM_ITERATIONS);
+        gd.Run();
     }
     
     public static void displayContents (double[][] table,  double[] summations){
@@ -66,6 +71,7 @@ public class ES_MiniProject {
          System.out.printf("Model: y = %.4fx + %.4f \n", slope, intercept); 
          System.out.println("*****************************************************************************************************************");
     }
+    
     public static void readFile( String file_path, String splitBy, double[][] table){
         String line = "";
         int ndx = 0; 
@@ -109,6 +115,10 @@ public class ES_MiniProject {
     }
     
     public static void solveSummations(double[][] table, double[] summations){
+        for(int i = 0; i < 8; i++){
+            summations[i] = 0;
+        }
+        
          for(int x = 0 ; x < table.length ; x++){
             for(int y=0 ; y < 8; y++){
                 summations[y] += table[x][y]; 
