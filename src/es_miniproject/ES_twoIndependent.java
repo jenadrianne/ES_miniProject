@@ -18,12 +18,13 @@ public class ES_twoIndependent {
     private static final double LEARNING_RATE = 0.0001;
    
     public static void main(String[] args) {
-        String file_path = "C:\\Users\\User\\Documents\\NetBeansProjects\\ES_MiniProject\\src\\files\\New.csv"; 
+        String file_path = "C:\\Users\\Kyle Yap\\Documents\\4thYear\\Expert Systems\\ES_miniProject\\src\\files\\New.csv"; 
         String line = "";
         String cvsSplitBy = ",";
         double[][] table = new double[731][11];
         double[] summations = new double[11]; 
-        double slope, slope2, yintercept; 
+        double slope, slope2, yintercept;
+        double[] errors;
         
         // completing the table
         readFile(file_path, cvsSplitBy, table);
@@ -40,8 +41,10 @@ public class ES_twoIndependent {
         yintercept = solveforIntercept(table.length, summations, slope, slope2);
 //        
 //        
-//        solveYHat(table, slope, yintercept); 
-//        solveErrors(table);
+        summations[8] = solveYHat(table, slope, slope2, yintercept); 
+        errors = solveErrors(table, summations);
+        summations[9] = errors[0];
+        summations[10] = errors[1];
 //        solveSummations(table, summations); 
 //        
 //        
@@ -71,11 +74,12 @@ public class ES_twoIndependent {
                  case 6 :  System.out.printf("Summation of X2Y:  %.4f \n", summations[y] ); break;
                  case 7 :  System.out.printf("Summation of X1X2:  %.4f \n", summations[y] ); break;
                  case 8 :  System.out.printf("Summation of Y':  %.4f \n", summations[y] ); break;
-                 case 9 : System.out.printf("Mean absulute error  %.4f \n", summations[y]/table.length ); break;
-                 case 10 : System.out.printf("Mean absolute percentage error:  %.4f \n", summations[y]/table.length ); break;
-                 case 11 : System.out.printf("Root mean squared error:  %.4f \n",  Math.sqrt(summations[y]/table.length)); break;
+                 case 9 :  System.out.printf("Mean absulute error:  %.4f \n", summations[y] ); break;
+                 case 10 : System.out.printf("Root mean squared error:  %.4f \n",  summations[y]); break;
              }
         }
+         System.out.printf("Mean absulute percentage error: %.2f", (summations[9]/table.length)*100);
+         System.out.print("% \n");
     }
     
     public  static void displayLinerRegression (double slope, double slope2, double intercept){
@@ -134,18 +138,25 @@ public class ES_twoIndependent {
        }
     }
     
-    public static void solveYHat(double[][] table, double slope, double intercept){
-        for(int x = 0 ; x < table.length ; x++ ){
-          table[x][4] = (table[x][0] *slope) +  intercept; 
+    public static double solveYHat(double[][] table, double slope, double slope2, double intercept){
+       double summation = 0; 
+       for(int x = 0 ; x < table.length ; x++ ){
+            table[x][8] = intercept + (slope*table[x][0]) + (slope2*table[x][1]); 
+            summation+=table[x][8];
        }
+       
+       return summation;
     }
     
-    public static void solveErrors(double[][] table){
+    public static double[] solveErrors(double[][] table, double[] summations){
+        double[] ret = new double[2];
         for(int x = 0 ; x < table.length ; x++ ){
-          table[x][5] = Math.abs(table[x][1] - table[x][4]);
-          table[x][6] = Math.abs((table[x][1] - table[x][4])/table[x][1]);
-          table[x][7] = Math.abs(table[x][5] * table[x][5]);
+          ret[0] += table[x][9] = Math.abs((table[x][2] - table[x][8])/table[x][2]);
+          ret[1] = table[x][2] - table[x][8];
+          ret[1] += ret[1]*ret[1];
+          ret[1] = Math.sqrt(ret[1]/table.length);
        }
+        return ret;
     }
     
     public static void solveSummations(double[][] table, double[] summations){
