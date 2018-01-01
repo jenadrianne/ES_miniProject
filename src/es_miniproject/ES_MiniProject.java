@@ -9,7 +9,7 @@ public class ES_MiniProject {
     private static final double LEARNING_RATE = 0.0001;
    
     public static void main(String[] args) {
-        String file_path = "C:\\Users\\Ted125\\Documents\\My Codes\\Java\\ES_MiniProject\\src\\files\\Book1.csv"; 
+        String file_path = "C:\\Users\\User\\Documents\\NetBeansProjects\\ES_MiniProject\\src\\files\\Old.csv"; 
         String line = "";
         String cvsSplitBy = ",";
         double[][] table = new double[731][8];
