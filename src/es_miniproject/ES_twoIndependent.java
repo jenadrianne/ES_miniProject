@@ -50,6 +50,8 @@ public class ES_twoIndependent {
 //        
         displayContents(table,summations); 
         displayLinerRegression (slope, slope2, yintercept);
+        GradientDescent_multiple descent_multiple = new GradientDescent_multiple(table, LEARNING_RATE, slope, slope2, yintercept, NUM_ITERATIONS);
+        descent_multiple.Run();
  
     }
     
